@@ -16,6 +16,8 @@ test2 = "COjsy OfUkp"
 #return [105, 11] the best is 11
 listeMot = ["COjsy OfUkp", "Hemlo Wohld", "AZERT ERTYF","ZdRfT ERfcd","azEdC Ujnmo"]
 
+nbIteration = 0
+
 # la fonction de conversion dune chaîne de caractères en liste de valeurs ASCII vous est founie
 def string_to_int_list(string):
     return [ord(character) for character in list(string)]
@@ -53,7 +55,7 @@ def get_best(string, listeCompare):
 # Fonction qui renvoie une liste de mots
 # prends en paramêtre le nombre de mot que doit contenir la liste
 def word_list_init(nombreDeMot, lettre):
-   
+ 
     listeMot = []
     
     # genere 5 lettres aléatoire, fait un espace et regènère 5 lettres aléatoire
@@ -87,8 +89,7 @@ def crossover(string1, string2):
     
     return enfant
     
-def new_generation(target, maListe):
-    
+def new_generation(target, maListe, nbIteration):
     newGeneration = []
     bestDistance = get_best(target, maListe)
     
@@ -100,8 +101,9 @@ def new_generation(target, maListe):
     #Ajoute le mot qui a la meilleur distance au tableau newGeneration
     newGeneration.append(bestDistance[0])
     bestWord = bestDistance[0]
-    if bestWord == target:
-        return "solution trouvé"
+    
+    if bestWord == target:        
+        return "solution trouvé", nbIteration, "iterations"
     else:  
         maListe.pop(maListe.index(bestWord))
 
@@ -113,7 +115,7 @@ def new_generation(target, maListe):
 
         maListe = newGeneration
         
-        return new_generation(target, maListe)
+        return new_generation(target, maListe, nbIteration + 1)
 
 def mutation(motAscii):
     tailleMot = len(motAscii)
@@ -121,12 +123,26 @@ def mutation(motAscii):
     for i in range(tailleMot):
         choice = random.randint(0,1)
         if choice == 1:
-            motAscii[i] += random.randint(-5,5)
+            if get_distance(target,ascii_to_lettre(motAscii)) >= 100:
+                motAscii[i] += random.randint(-10,10)
+            elif get_distance(target,ascii_to_lettre(motAscii)) >= 40:
+                motAscii[i] += random.randint(-5,5)
+            elif get_distance(target, ascii_to_lettre(motAscii)) >= 30:
+                motAscii[i] += random.randint(-4,4)
+            elif get_distance(target, ascii_to_lettre(motAscii)) >= 20:
+                motAscii[i] += random.randint(-3,3)
+            elif get_distance(target, ascii_to_lettre(motAscii)) >= 10:
+                motAscii[i] += random.randint(-2,2)
+            elif get_distance(target, ascii_to_lettre( motAscii)) < 10:
+                motAscii[i] += random.randint(-1,1)
         
     return motAscii
 
-listeInit = word_list_init(10, 11)
+listeInit = word_list_init(10, len(target))
 print(listeInit)
-print(new_generation(target, listeInit))
+start = time.time()
+print(new_generation(target, listeInit, nbIteration))
+end = time.time() - start
+print(end)
 
 
