@@ -121,83 +121,69 @@ def new_generation(target, maListe):
 def mutation(motAscii):
     tailleMot = len(motAscii)
     
-    choice = random.randint(0,tailleMot)
-    bestDistance = get_distance(target, ascii_to_lettre(motAscii))
-
-    if bestDistance >= 500:
-        randomNumber = random.randint(-100,100)
-        motAscii[choice]  = (randomNumber + motAscii[choice])%255 
-    elif bestDistance >= 100:
-        randomNumber = random.randint(-12,12)
-        motAscii[choice]  = (randomNumber + motAscii[choice])%255 
-    elif bestDistance > 20:
-        randomNumber = random.randint(-3,3)
-        motAscii[choice]  = (randomNumber + motAscii[choice])%255 
-    else:
-        randomNumber = random.randint(-1,1)
-        motAscii[choice] = (randomNumber + motAscii[choice])%255 
-                
+    for i in range(tailleMot):
+        choice = random.randint(0,3)
+        if choice == 3:
+            if get_distance(target,ascii_to_lettre(motAscii)) >= 100:
+                randomNumber = random.randint(-10,10)
+            if get_distance(target,ascii_to_lettre(motAscii)) >= 60:
+                randomNumber = random.randint(-6,6)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
+            elif get_distance(target,ascii_to_lettre(motAscii)) >= 40:
+                randomNumber = random.randint(-5,5)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
+            elif get_distance(target, ascii_to_lettre(motAscii)) >= 30:
+                randomNumber = random.randint(-4,4)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
+            elif get_distance(target, ascii_to_lettre(motAscii)) >= 20:
+                randomNumber = random.randint(-3,3)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
+            elif get_distance(target, ascii_to_lettre(motAscii)) >= 10:
+                randomNumber = random.randint(-2,2)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
+            elif get_distance(target, ascii_to_lettre( motAscii)) < 10:
+                randomNumber = random.randint(-1,1)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
+        
     return motAscii
 
-# test_length = 20
-# # target = "Hello World"
-# target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
-# print("target : ",target)
+test_length = 20
 
-# listeInit = word_list_init(100, len(target))
-# start = time.time()
+target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
+print("target : ",target)
 
-# print("iteration n°" ,nbIteration)
-# newGeneList = new_generation(target, listeInit)
-# bestWord = get_best(target, newGeneList)[0]
-# bestDistance = get_best(target,newGeneList)[1]
-
-# while bestWord != target:
-#     nbIteration += 1
-#     print("iteration n°",nbIteration)
-#     newGeneList = new_generation(target, newGeneList)
-#     bestWord = get_best(target, newGeneList)[0]
-#     bestDistance = get_best(target,newGeneList)[1]
-
-# end = time.time() - start
-# print(end)
-
-
-# # La cible est :
-# #/\     /\
-# #  \ _____\
-#   (_)-(_)
-ascii_target="/\     /\   \ _____\   (_)-(_)"
 listeInit = word_list_init(200, len(target))
+start = time.time()
 
-# print("iteration n°" ,nbIteration)
+print("iteration n°" ,nbIteration)
+newGeneList = new_generation(target, listeInit)
+bestWord = get_best(target, newGeneList)[0]
+bestDistance = get_best(target,newGeneList)[1]
 
-# newGeneList = new_generation(target, listeInit)
-# bestWord = get_best(target, newGeneList)[0]
-# bestDistance = get_best(target,newGeneList)[1]
+while bestWord != target:
+    nbIteration += 1
+    print("iteration n°",nbIteration)
+    newGeneList = new_generation(target, newGeneList)
+    bestWord = get_best(target, newGeneList)[0]
+    bestDistance = get_best(target,newGeneList)[1]
 
-# while bestWord != target:
-#     nbIteration += 1
-#     print("iteration n°",nbIteration)
-#     newGeneList = new_generation(target, newGeneList)
-#     bestWord = get_best(target, newGeneList)[0]
-#     bestDistance = get_best(target,newGeneList)[1]
+end = time.time() - start
+print(end)
 
+# # # La cible est :
+# # #/\     /\
+# # #  \ _____\
+# # #   (_)-(_)
+# ascii_target="/\     /\   \ _____\   (_)-(_)"
 
+# def printer_ascii(indiv, length):
+#     tab_print = [indiv[i*length:(i*length)+length] for i in range(int(len(indiv)/length))]
+#     for line in tab_print:
+#         print("".join(chr(c) for c in line))
 
-def printer_ascii(indiv, length):
-    tab_print = [indiv[i*length:(i*length)+length] for i in range(int(len(indiv)/length))]
-    for line in tab_print:
-        print("".join(chr(c) for c in line))
+# listeAscii = []
+# for c in ascii_target:
+#     listeAscii.append(c)
 
-# listeAscii = printer_ascii(ascii_target, len(ascii_target))
-
-asciiListInt = string_to_int_list(ascii_target)
-lentgh = len(asciiListInt)
-for i in range(lentgh):
-    if asciiListInt[i] % lentgh == 0:
-        asciiListInt[i].append(11)
-
-print(asciiListInt)
-asciiLettre = ascii_to_lettre(asciiListInt)
-print(asciiLettre)
+print(listeAscii)
+print(printer_ascii(listeAscii, len(listeAscii)))
