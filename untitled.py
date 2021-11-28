@@ -138,26 +138,26 @@ def mutation(motAscii, maTarget):
     tailleMot = len(motAscii)
     distance = get_distance(maTarget,ascii_to_lettre(motAscii))
     for i in range(tailleMot):
-        if distance < 100:
-            chance = random.randint(0,20)
+        if distance < 100 and distance >= 50:
+            chance = random.randint(0,9)
             if chance == 1:
-                poidsMutation = distance// 20
+                poidsMutation = distance// 23
                 randomNumber = random.randint(-1 * poidsMutation,poidsMutation)
                 motAscii[i] = (randomNumber + motAscii[i]) % 255
-        elif distance < 50:
-            chance = random.randint(0,200)
+        elif distance < 50 and distance >= 15:
+            chance = random.randint(0,12)
             if chance == 1:
                 poidsMutation = 2
                 randomNumber = random.randint(-1 * poidsMutation,poidsMutation)
                 motAscii[i] = (randomNumber + motAscii[i]) % 255
-        elif distance < 20:
-            chance = random.randint(0,2)
+        elif distance < 15:
+            chance = random.randint(0,15)
             if chance == 1:
                 poidsMutation = 1
                 randomNumber = random.randint(-1 * poidsMutation,poidsMutation)
                 motAscii[i] = (randomNumber + motAscii[i]) % 255
         else:
-            chance = random.randint(0,3)
+            chance = random.randint(0,18)
             if chance == 1:
                 poidsMutation = distance// 11
                 randomNumber = random.randint(-1 * poidsMutation,poidsMutation)
@@ -192,31 +192,34 @@ def printer_ascii(indiv, length):
 ascii_batman="              *         *      *         *                        ***          **********          ***                 *****           **********           *****            *******           **********           *******        **********         ************         **********     ****************************************************   ****************************************************** ************************************************************************************************************************************************************************ ******************************************************   ********      ************************      ********     *******       *     *********      *       *******        ******             *******              ******            *****             *****              *****                 ***             ***              ***                      **             *              **            "
 
 target_toupie ="     /\        .'  `.    .'      `. <          > `.      .'    `.  .'        \/     "
-ascii_target="/\     /\   \ _____\   (_)-(_)"
+ascii_target = "/\     /\   \ _____\   (_)-(_)"
 
 
-# test_length = 32
-# target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
-print("target : ",ascii_target, "de longueur", len(ascii_target))
+def enRoute(maSuperTarget, nbIteration):
+    # test_length = 32
+    # target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
+    print("target : ",maSuperTarget, "de longueur", len(maSuperTarget))
 
-listeInit = word_list_init(200, len(ascii_target))
+    listeInit = word_list_init(100, len(maSuperTarget))
 
-print("iteration n°" ,nbIteration)
-newGeneList = new_generation(ascii_target, listeInit)
-bestWord = get_best(ascii_target, newGeneList)[0]
-bestDistance = get_best(ascii_target,newGeneList)[1]
-print("le meilleur mot est :", bestWord,"avec une distance de:",bestDistance) 
-# time.sleep(1)
-
-start = time.time()
-while bestWord != ascii_target:
+    print("iteration n°" ,nbIteration)
+    newGeneList = new_generation(maSuperTarget, listeInit)
+    bestWord = get_best(maSuperTarget, newGeneList)[0]
+    bestDistance = get_best(maSuperTarget,newGeneList)[1]
+    print("le meilleur mot est :", bestWord,"avec une distance de:",bestDistance) 
     # time.sleep(1)
-    nbIteration += 1
-    print("iteration n°",nbIteration)
-    newGeneList = new_generation(ascii_target, newGeneList)
-    bestWord = get_best(ascii_target, newGeneList)[0]
-    bestDistance = get_best(ascii_target,newGeneList)[1]
-    print("     le meilleur mot est :", bestWord,"avec une distance de:",bestDistance) 
-print(time.time() - start)
-asciiIntList = string_to_int_list(bestWord)
-targetAscii = printer_ascii(asciiIntList, 10)
+
+    start = time.time()
+    while bestWord != maSuperTarget:
+        # time.sleep(1)
+        nbIteration += 1
+        print("iteration n°",nbIteration)
+        newGeneList = new_generation(maSuperTarget, newGeneList)
+        bestWord = get_best(maSuperTarget, newGeneList)[0]
+        bestDistance = get_best(maSuperTarget,newGeneList)[1]
+        print("     le meilleur mot est :", bestWord,"avec une distance de:",bestDistance) 
+    print(time.time() - start)
+    asciiIntList = string_to_int_list(bestWord)
+    targetAscii = printer_ascii(asciiIntList, 10)
+
+enRoute(ascii_target, nbIteration)
