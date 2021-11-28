@@ -194,20 +194,20 @@ while bestWord != target:
 end = time.time() - start
 print(end)
 
-# # # La cible est :
-# # #/\     /\
-# # #  \ _____\
-# # #   (_)-(_)
-# ascii_target="/\     /\   \ _____\   (_)-(_)"
+# # La cible est :
+# #/\     /\
+# #  \ _____\
+# #   (_)-(_)
+ascii_target="/\     /\   \ _____\   (_)-(_)"
 
-# def printer_ascii(indiv, length):
-#     tab_print = [indiv[i*length:(i*length)+length] for i in range(int(len(indiv)/length))]
-#     for line in tab_print:
-#         print("".join(chr(c) for c in line))
+def printer_ascii(indiv, length):
+    tab_print = [indiv[i*length:(i*length)+length] for i in range(int(len(indiv)/length))]
+    for line in tab_print:
+        print("".join(chr(c) for c in line))
 
-# listeAscii = []
-# for c in ascii_target:
-#     listeAscii.append(c)
+listeAscii = []
+for c in ascii_target:
+    listeAscii.append(c)
 
-# print(listeAscii)
-# print(printer_ascii(listeAscii, len(listeAscii)))
+print(listeAscii)
+print(printer_ascii(listeAscii, len(listeAscii)))
