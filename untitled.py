@@ -141,7 +141,7 @@ def mutation(motAscii, maTarget):
         if distance < 100 and distance >= 50:
             chance = random.randint(0,9)
             if chance == 1:
-                poidsMutation = distance// 23
+                poidsMutation = distance// 20
                 randomNumber = random.randint(-1 * poidsMutation,poidsMutation)
                 motAscii[i] = (randomNumber + motAscii[i]) % 255
         elif distance < 50 and distance >= 15:
@@ -159,7 +159,7 @@ def mutation(motAscii, maTarget):
         else:
             chance = random.randint(0,18)
             if chance == 1:
-                poidsMutation = distance// 11
+                poidsMutation = distance// 10
                 randomNumber = random.randint(-1 * poidsMutation,poidsMutation)
                 motAscii[i] = (randomNumber + motAscii[i]) % 255 
  
