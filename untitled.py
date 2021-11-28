@@ -1,7 +1,7 @@
 # tous les imports de ce TD devront être placés ici
 import random
 import time
-
+import numpy as np
 import string
 
 
@@ -48,7 +48,7 @@ def get_best(string, listeCompare):
         
     minDistance = min(listeDistance)
     mot = listeCompare[listeDistance.index(minDistance)]
-            
+    print("le meilleur mot est :", mot,"avec une distance de:",minDistance) 
     return mot, minDistance
 
 
@@ -91,41 +91,64 @@ def crossover(string1, string2):
     
 def new_generation(target, maListe):
     newGeneration = []
-    bestDistance = get_best(target, maListe)
-    
-    #indique le meilleur mot avec sa distance
-    print("     Mot :",bestDistance[0], "distance : ",bestDistance[1] )
-    
     lenMaListe = len(maListe)
     
     #Ajoute le mot qui a la meilleur distance au tableau newGeneration
-    newGeneration.append(bestDistance[0])
-    bestWord = bestDistance[0]
-    
-    if bestWord == target:        
-        return "solution trouvé en", nbIteration, "iterations"        
-    else:  
+    for i in range(5):
+        bestDistance = get_best(target, maListe)
+        bestWord = bestDistance[0]
+        newGeneration.append(bestWord)
         maListe.pop(maListe.index(bestWord))
 
-        while len(newGeneration) != lenMaListe:
-            randomWord1 = random.choice(maListe)
-            randomWord2 = random.choice(maListe)
-            newEnfant = crossover(bestWord, randomWord2)
-            newEnfant = mutation(newEnfant)
-            newGeneration.append(ascii_to_lettre(newEnfant))
+    while len(newGeneration) != lenMaListe:
+        random = np.random.choice(np.arange(0, 5), p=[0.5, 0.25, 0.15, 0.05, 0.05])
+        if random == 0:
+            randomWord1 = newGeneration[0]
+            randomWord2 = newGeneration[0]
+            newEnfant1 = crossover(randomWord1, randomWord2)
+            test = newEnfant1
+            newEnfant2 = mutation(newEnfant1)
+            newGeneration.append(ascii_to_lettre(newEnfant2))
+        elif random == 1:
+            randomWord1 = newGeneration[0]
+            randomWord2 = newGeneration[1]
+            newEnfant1 = crossover(randomWord1, randomWord2)
+            test = newEnfant1
+            newEnfant2 = mutation(newEnfant1)
+            newGeneration.append(ascii_to_lettre(newEnfant2))
+        elif random == 2:
+            randomWord1 = newGeneration[1]
+            randomWord2 = newGeneration[2]
+            newEnfant1 = crossover(randomWord1, randomWord2)
+            test = newEnfant1
+            newEnfant2 = mutation(newEnfant1)
+            newGeneration.append(ascii_to_lettre(newEnfant2))
+        elif random == 3:
+            randomWord1 = newGeneration[2]
+            randomWord2 = newGeneration[3]
+            newEnfant1 = crossover(randomWord1, randomWord2)
+            test = newEnfant1
+            newEnfant2 = mutation(newEnfant1)
+            newGeneration.append(ascii_to_lettre(newEnfant2))
+        elif random == 4:
+            randomWord1 = newGeneration[3]
+            randomWord2 = newGeneration[4]
+            newEnfant1 = crossover(randomWord1, randomWord2)
+            test = newEnfant1
+            newEnfant2 = mutation(newEnfant1)
+            newGeneration.append(ascii_to_lettre(newEnfant2))
 
-        maListe = newGeneration
-        
-        return maListe
+    return newGeneration
 
 def mutation(motAscii):
     tailleMot = len(motAscii)
     
     for i in range(tailleMot):
-        choice = random.randint(0,3)
+        choice = random.randint(0,5)
         if choice == 3:
             if get_distance(target,ascii_to_lettre(motAscii)) >= 100:
                 randomNumber = random.randint(-10,10)
+                motAscii[i] = (randomNumber + motAscii[i])%255 
             if get_distance(target,ascii_to_lettre(motAscii)) >= 60:
                 randomNumber = random.randint(-6,6)
                 motAscii[i] = (randomNumber + motAscii[i])%255 
@@ -147,8 +170,7 @@ def mutation(motAscii):
         
     return motAscii
 
-test_length = 20
-
+test_length = 32
 target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
 print("target : ",target)
 
@@ -159,6 +181,7 @@ print("iteration n°" ,nbIteration)
 newGeneList = new_generation(target, listeInit)
 bestWord = get_best(target, newGeneList)[0]
 bestDistance = get_best(target,newGeneList)[1]
+# time.sleep(1)
 
 while bestWord != target:
     nbIteration += 1
@@ -166,6 +189,7 @@ while bestWord != target:
     newGeneList = new_generation(target, newGeneList)
     bestWord = get_best(target, newGeneList)[0]
     bestDistance = get_best(target,newGeneList)[1]
+    #time.sleep(1)
 
 end = time.time() - start
 print(end)
@@ -185,5 +209,5 @@ print(end)
 # for c in ascii_target:
 #     listeAscii.append(c)
 
-print(listeAscii)
-print(printer_ascii(listeAscii, len(listeAscii)))
+# print(listeAscii)
+# print(printer_ascii(listeAscii, len(listeAscii)))
