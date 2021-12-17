@@ -1,22 +1,11 @@
 # tous les imports de ce TD devront être placés ici
+from math import dist
 import random
 import time
-
+import numpy as np
 import string
 
-
-# le mot à trouver
-target = "Hello World"
-
-#résultat 11
-test = "Hemlo Wohld"
-#resultat 105
-test2 = "COjsy OfUkp"
-
-#return [105, 11] the best is 11
-listeMot = ["COjsy OfUkp", "Hemlo Wohld", "AZERT ERTYF","ZdRfT ERfcd","azEdC Ujnmo"]
-
-nbIteration = 0
+nb_iteration = 0
 
 # la fonction de conversion dune chaîne de caractères en liste de valeurs ASCII vous est founie
 def string_to_int_list(string):
@@ -24,125 +13,203 @@ def string_to_int_list(string):
 
 
 def get_distance(string1, string2):
-    
-    distance =0 
+    distance = 0 
     index = 0
-    distanceB = 0
+    distance_B = 0
     int1 = string_to_int_list(string1)
     int2 = string_to_int_list(string2)
     
     for number in int1:
-        distanceB = abs(int1[index] - int2[index])
-        distance += distanceB
+        distance_B = abs(int1[index] - int2[index])
+        distance += distance_B
         index += 1
     
     return distance
 
 
-def get_best(string, listeCompare):
+def get_best(string, liste_compare):
+    liste_distance = []
     
-    listeDistance = []
-    
-    for listeNombre in listeCompare:
-        listeDistance.append(get_distance(string,listeNombre))
+    for liste_nombre in liste_compare:
+        liste_distance.append(get_distance(string,liste_nombre))
         
-    minDistance = min(listeDistance)
-    mot = listeCompare[listeDistance.index(minDistance)]
-            
-    return mot, minDistance
+    min_distance = min(liste_distance)
+    mot = liste_compare[liste_distance.index(min_distance)]
+    return mot, min_distance
 
 
 # Fonction qui renvoie une liste de mots
 # prends en paramêtre le nombre de mot que doit contenir la liste
-def word_list_init(nombreDeMot, lettre):
- 
-    listeMot = []
+def word_list_init(nombre_de_mot, lettre):
+    liste_mot = []
     
     # genere 5 lettres aléatoire, fait un espace et regènère 5 lettres aléatoire
     # le nombre de fois qui est demandé par la fonction passé en paramètre
-    for iteration in range(nombreDeMot):
-        listeMot.append(''.join(
-                                random.choice(string.ascii_letters) 
+    for iteration in range(nombre_de_mot):
+        liste_mot.append(''.join(random.choice(string.ascii_letters) 
                                 for index in range(lettre)))
-    return listeMot
+    return liste_mot
 
-#change une liste ascii en mot
-def ascii_to_lettre(asciiListe):
-    return ''.join(chr(i) for i in asciiListe)
+#change une liste asctii en mot
+def ascii_to_lettre(ascii_liste):
+    return ''.join(chr(i) for i in ascii_liste)
 
 
 def crossover(string1, string2):
-        
-    string1Int = string_to_int_list(string1)
-    string2Int = string_to_int_list(string2)
-    
+    string1_int = string_to_int_list(string1)
+    string2_int = string_to_int_list(string2)
     enfant = []
+    string1_length = len(string1_int)
     
-    string1Length = len(string1Int)
-    
-    for i in range(string1Length):
-        choice = random.randint(0,1)
-        if choice == 1: 
-            enfant.append(string1Int[i])
+    for i in range(string1_length):
+        choice = np.random.choice(np.arange(0, 2), 
+                                  p=[0.85, 0.15])
+        if choice == 0: 
+            enfant.append(string1_int[i])
         else: 
-            enfant.append(string2Int[i])
+            enfant.append(string2_int[i])
     
     return enfant
     
-def new_generation(target, maListe, nbIteration):
-    newGeneration = []
-    bestDistance = get_best(target, maListe)
+def new_generation(ma_super_target, ma_liste):
+    new_generation = []
+    len_ma_liste = len(ma_liste)
     
-    #indique le meilleur mot avec sa distance
-    print(bestDistance)
+    #Ajoute le mot qui a la meilleur distance au tableau new_generation
+    for i in range(5):
+        best_distance = get_best(ma_super_target, ma_liste)
+        best_word = best_distance[0]
+        new_generation.append(best_word)
+        ma_liste.pop(ma_liste.index(best_word))
+
+    while len(new_generation) != len_ma_liste:
+        random = np.random.choice(np.arange(0, 5), p=[0.2, 0.2, 0.2, 0.2, 0.2])
+        if best_distance[1] > 100:
+            if random == 0:
+                random_word1 = new_generation[0]
+                random_word2 = new_generation[0]
+                new_enfant1 = crossover(random_word1, random_word2)
+                new_enfant2 = mutation(new_enfant1,ma_super_target)
+                new_generation.append(ascii_to_lettre(new_enfant2))
+            elif random == 1:
+                random_word1 = new_generation[0]
+                random_word2 = new_generation[1]
+                new_enfant1 = crossover(random_word1, random_word2)
+                new_enfant2 = mutation(new_enfant1, ma_super_target)
+                new_generation.append(ascii_to_lettre(new_enfant2))
+            elif random == 2:
+                random_word1 = new_generation[1]
+                random_word2 = new_generation[2]
+                new_enfant1 = crossover(random_word1, random_word2)
+                new_enfant2 = mutation(new_enfant1, ma_super_target)
+                new_generation.append(ascii_to_lettre(new_enfant1))
+            elif random == 3:
+                random_word1 = new_generation[2]
+                random_word2 = new_generation[3]
+                new_enfant1 = crossover(random_word1, random_word2)
+                new_enfant2 = mutation(new_enfant1, ma_super_target)
+                new_generation.append(ascii_to_lettre(new_enfant1))
+            elif random == 4:
+                random_word1 = new_generation[3]
+                random_word2 = new_generation[4]
+                new_enfant1 = crossover(random_word1, random_word2)
+                new_enfant2 = mutation(new_enfant1, ma_super_target)
+                new_generation.append(ascii_to_lettre(new_enfant1))
+        else:
+            random_word2 = np.random.choice(ma_liste)
+            random_word1 = np.random.choice(new_generation)
+            new_enfant1 = crossover(random_word1, random_word2)
+            new_enfant2 = mutation(new_enfant1,ma_super_target)
+            new_generation.append(ascii_to_lettre(new_enfant2))
+
+    return new_generation
+
+def mutation(mot_ascii, ma_target):
+    taille_mot = len(mot_ascii)
+    distance = get_distance(ma_target, ascii_to_lettre(mot_ascii))
     
-    lenMaListe = len(maListe)
-    
-    #Ajoute le mot qui a la meilleur distance au tableau newGeneration
-    newGeneration.append(bestDistance[0])
-    bestWord = bestDistance[0]
-    
-    if bestWord == target:        
-        return "solution trouvé", nbIteration, "iterations"
-    else:  
-        maListe.pop(maListe.index(bestWord))
+    for i in range(taille_mot):
+        if distance < 100 and distance >= 50:
+            chance = random.randint(0,9)
+            if chance == 1:
+                poids_mutation = distance// 20
+                random_number = random.randint(-1 * poids_mutation, poids_mutation)
+                mot_ascii[i] = (random_number + mot_ascii[i]) % 255
+        elif distance < 50 and distance >= 15:
+            chance = random.randint(0,12)
+            if chance == 1:
+                poids_mutation = 2
+                random_number = random.randint(-1 * poids_mutation, poids_mutation)
+                mot_ascii[i] = (random_number + mot_ascii[i]) % 255
+        elif distance < 15:
+            chance = random.randint(0,15)
+            if chance == 1:
+                poids_mutation = 1
+                random_number = random.randint(-1 * poids_mutation, poids_mutation)
+                mot_ascii[i] = (random_number + mot_ascii[i]) % 255
+        else:
+            chance = random.randint(0,18)
+            if chance == 1:
+                poids_mutation = distance// 10
+                random_number = random.randint(-1 * poids_mutation, poids_mutation)
+                mot_ascii[i] = (random_number + mot_ascii[i]) % 255 
+ 
+    return mot_ascii
 
-        while len(newGeneration) != lenMaListe:
-            randomWord = random.choice(maListe)
-            newEnfant = crossover(bestWord, randomWord)
-            newEnfant = mutation(newEnfant)
-            newGeneration.append(ascii_to_lettre(newEnfant))
-
-        maListe = newGeneration
-        
-        return new_generation(target, maListe, nbIteration + 1)
-
-def mutation(motAscii):
-    tailleMot = len(motAscii)
-    
-    for i in range(tailleMot):
-        choice = random.randint(0,1)
-        if choice == 1:
-            if get_distance(target,ascii_to_lettre(motAscii)) >= 100:
-                motAscii[i] += random.randint(-10,10)
-            elif get_distance(target,ascii_to_lettre(motAscii)) >= 40:
-                motAscii[i] += random.randint(-5,5)
-            elif get_distance(target, ascii_to_lettre(motAscii)) >= 30:
-                motAscii[i] += random.randint(-4,4)
-            elif get_distance(target, ascii_to_lettre(motAscii)) >= 20:
-                motAscii[i] += random.randint(-3,3)
-            elif get_distance(target, ascii_to_lettre(motAscii)) >= 10:
-                motAscii[i] += random.randint(-2,2)
-            elif get_distance(target, ascii_to_lettre( motAscii)) < 10:
-                motAscii[i] += random.randint(-1,1)
-        
-    return motAscii
-
-listeInit = word_list_init(10, len(target))
-print(listeInit)
-start = time.time()
-print(new_generation(target, listeInit, nbIteration))
-end = time.time() - start
-print(end)
+def printer_ascii(indiv, length):
+    tab_print = [indiv[i*length:(i*length)+length] for i in range(int(len(indiv)/length))]
+    for line in tab_print:
+        print("".join(chr(c) for c in line))
 
 
+
+#               *         *      *         *              
+#           ***          **********          ***          
+#        *****           **********           *****       
+#      *******           **********           *******     
+#    **********         ************         **********   
+#  ****************************************************** 
+# ********************************************************
+# ********************************************************
+# ********************************************************
+#  ****************************************************** 
+#   ********      ************************      ********  
+#    *******       *     *********      *       *******   
+#        *****             *****              *****       
+#           ***             ***              ***          
+#             **             *              **            
+
+
+ascii_batman="              *         *      *         *                        ***          **********          ***                 *****           **********           *****            *******           **********           *******        **********         ************         **********     ****************************************************   ****************************************************** ************************************************************************************************************************************************************************ ******************************************************   ********      ************************      ********     *******       *     *********      *       *******        ******             *******              ******            *****             *****              *****                 ***             ***              ***                      **             *              **            "
+
+target_toupie ="     /\        .'  `.    .'      `. <          > `.      .'    `.  .'        \/     "
+ascii_target = "/\     /\   \ _____\   (_)-(_)"
+
+       
+test_length = 32
+target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
+nb_iteration = 0
+
+def algo_genetique(ma_super_target, nb_iteration):
+    print("ma_super_target : ",ma_super_target, "de longueur", len(ma_super_target))
+
+    listeInit = word_list_init(100, len(ma_super_target))
+
+    print("iteration n°" ,nb_iteration)
+    new_gene_list = new_generation(ma_super_target, listeInit)
+    best_word = get_best(ma_super_target, new_gene_list)[0]
+    best_distance = get_best(ma_super_target,new_gene_list)[1]
+    print("le meilleur mot est :", best_word,"avec une distance de:",best_distance) 
+    # time.sleep(1)
+
+    start = time.time()
+    while best_word != ma_super_target:
+        # time.sleep(1)
+        nb_iteration += 1
+        print("iteration n°",ma_super_target)
+        new_gene_list = new_generation(ma_super_target, new_gene_list)
+        best_word = get_best(ma_super_target, new_gene_list)[0]
+        best_distance = get_best(ma_super_target,new_gene_list)[1]
+        print("     le meilleur mot est :", best_word,"avec une distance de:",best_distance) 
+
+algo_genetique(target, nb_iteration)
