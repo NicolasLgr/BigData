@@ -1,6 +1,7 @@
 import csv
-
+import ../TD1/
 tab = []
+mon_fichier = []
 
 # 47 normalement
 def get_result_from_csv(name, csv_file):
@@ -16,6 +17,7 @@ def get_result_from_csv(name, csv_file):
                                 if -5000000 <= int(line[7]) <= 5000000:
                                     tab.append(line)
     return tab, len(tab)
-                        
 
-print(get_result_from_csv("Leger", "ExamColl.csv"))
+for elments in get_result_from_csv("Leger", "ExamColl.csv")[0]:
+    print(elments)
+
