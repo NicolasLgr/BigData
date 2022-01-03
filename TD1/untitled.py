@@ -32,9 +32,14 @@ def get_best(string, liste_compare):
     
     for liste_nombre in liste_compare:
         liste_distance.append(get_distance(string,liste_nombre))
-        
-    min_distance = min(liste_distance)
-    mot = liste_compare[liste_distance.index(min_distance)]
+        if len(liste_distance) == 1:
+            min_distance = liste_distance[0]
+            mot = liste_nombre
+        else:
+            if get_distance(string,liste_nombre) < min_distance:
+                min_distance = get_distance(string,liste_nombre)
+                mot = liste_nombre
+            
     return mot, min_distance
 
 
@@ -186,8 +191,8 @@ target_toupie ="     /\        .'  `.    .'      `. <          > `.      .'    `
 ascii_target = "/\     /\   \ _____\   (_)-(_)"
 
        
-test_length = 32
-target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
+# test_length = 32
+# target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
 nb_iteration = 0
 
 def algo_genetique(ma_super_target, nb_iteration):
@@ -212,4 +217,4 @@ def algo_genetique(ma_super_target, nb_iteration):
         best_distance = get_best(ma_super_target,new_gene_list)[1]
         print("     le meilleur mot est :", best_word,"avec une distance de:",best_distance) 
 
-algo_genetique(target, nb_iteration)
+algo_genetique(ascii_batman, nb_iteration)
