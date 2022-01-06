@@ -1,6 +1,13 @@
 import csv
+import pandas
 
 tab = []
+
+# "_id",name,x1,x2,x3,x4,x5,y
+# x1 à x5 compris entre -1000 et 1000
+# Dès que il y a une valeur à 0 on enlève
+# y compris entre 5 millions et -5 millions
+
 
 # 47 normalement
 def get_result_from_csv(name, csv_file):
@@ -16,6 +23,12 @@ def get_result_from_csv(name, csv_file):
                                 if -5000000 <= int(line[7]) <= 5000000:
                                     tab.append(line)
     return tab, len(tab)
-                        
+                      
 
-print(get_result_from_csv("Leger", "ExamColl.csv"))
+def get_result_2(name, csv_file):
+    with open(csv_file, "r") as file:
+        data = file.readlines()
+        print(data)
+
+get_result_2("Leger", "ExamColl.csv")
+# print(get_result_from_csv("Leger", "ExamColl.csv"))
