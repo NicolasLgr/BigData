@@ -67,17 +67,13 @@ def word_list_init(nombre_de_mot, nb_facteur):
 def crossover_nombre(mon_c1, mon_c2):
     enfant = []
     list_number1_length = len(mon_c1)
-    print("mon c1 : ", mon_c1)
-    print("mon c2 : ", mon_c2)
     # Il y a 85% de chance de prendre la lettre du premiers mot placé en paramêtre
     for i in range(list_number1_length):
         choice = np.random.choice(np.arange(0, 2), 
                                   p=[0.85, 0.15])
         if choice == 0: 
-            print(mon_c1[i])
             enfant.append(mon_c1[i])
         else: 
-            print(mon_c2[i])
             enfant.append(mon_c2[i])
     return enfant
 
@@ -91,7 +87,6 @@ def new_generation(mon_y, mon_x, liste_de_c):
         best_word = best_distance[0]
         new_generation.append(best_word)
         liste_de_c.pop(liste_de_c.index(best_word))
-    print(new_generation)
 
     while len(new_generation) != len_mon_c:
         random = np.random.choice(np.arange(0, 5), p=[0.2, 0.2, 0.2, 0.2, 0.2])
@@ -99,36 +94,32 @@ def new_generation(mon_y, mon_x, liste_de_c):
             random_word1 = new_generation[0]
             random_word2 = new_generation[1]
             new_enfant1 = crossover_nombre(random_word1, random_word2)
-            print("enfant 1 : ", new_enfant1)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            print("enfant 2 : ", new_enfant2)
             new_generation.append(new_enfant2)
         elif random == 1:
             random_word1 = new_generation[1]
             random_word2 = new_generation[2]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
+            new_enfant1 = crossover_chiffre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant2)
         elif random == 2:
             random_word1 = new_generation[2]
             random_word2 = new_generation[3]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
+            new_enfant1 = crossover_chiffre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant1)
         elif random == 3:
             random_word1 = new_generation[3]
             random_word2 = new_generation[4]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
+            new_enfant1 = crossover_chiffre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant1)
         elif random == 4:
             random_word1 = new_generation[4]
             random_word2 = new_generation[5]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
+            new_enfant1 = crossover_chiffre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant1)
-    print(new_generation)
-    time.sleep(0.1)
     return new_generation
 
 # Prend en paramêtre un mot et la target
@@ -180,7 +171,44 @@ def mutation(mon_y, mon_x, mon_c ):
  
     return mon_c
 
+def list_int_to_number(list_of_integers):
+    strings = [str(integer) for integer in list_of_integers]
+    a_string = "".join(strings)
+    an_integer = int(a_string)
+    return an_integer
 
+# Prends 2 mots en paramêtres
+# Renvoie un nouveau mot en mélangeant les 2 mots données
+def crossover_chiffre(mon_c1, mon_c2):
+    print(mon_c1)
+    print(mon_c2)
+    
+    enfant = []
+    for i in range(len(mon_c1)):
+        mon_c1_lettre = list(str(mon_c1[i]))
+        mon_c2_lettre = list(str(mon_c2[i]))
+        print(mon_c1_lettre)
+        print(mon_c2_lettre)
+        
+        if mon_c1_lettre[0] != '-':
+            mon_c1_lettre.insert(0, '+')
+        if mon_c2_lettre[0] != '-':
+            mon_c2_lettre.insert(0, '+')
+        print(mon_c1_lettre)
+        print(mon_c2_lettre)
+    
+        list_number1_length = len(mon_c1)
+        # Il y a 85% de chance de prendre la lettre du premiers mot placé en paramêtre
+        for i in range(list_number1_length):
+            choice = np.random.choice(np.arange(0, 2), 
+                                    p=[0.85, 0.15])
+            if choice == 0: 
+                enfant.append(mon_c1_lettre[i])
+            else: 
+                enfant.append(mon_c2_lettre[i])
+            print(enfant)
+            print(map(int, enfant))
+    return list_int_to_number(map(int, enfant))
 
 x = [444, 510, 789,-862, 306]
 c = [[982, 932, -834, 995, 948], [543, 678, -320, 900, 832]] 
@@ -209,6 +237,10 @@ def algo_genetique(mon_y, mon_x, nb_iteration):
         print("     le meilleur mot est :", best_word,"avec une distance de:",best_distance)
 
 print(algo_genetique(y, x, 0))
+
+# testchiffre = ['1','2','3']
+# list_chiffre = map(int, testchiffre)
+# print(list_int_to_number(list_chiffre))
 
 test = [794, -621, -204, 1, -97]
 
