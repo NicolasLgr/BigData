@@ -1,6 +1,6 @@
 import csv
 from os import listdir, times
-import random
+import random as rd
 import numpy as np
 import time
 
@@ -56,7 +56,7 @@ def word_list_init(nombre_de_mot, nb_facteur):
 
     for iteration in range(nombre_de_mot):
         for i in range(nb_facteur):
-            liste_mot.append(random.randint(-1000, 1000))
+            liste_mot.append(rd.randint(-1000, 1000))
         end_list.append(liste_mot.copy())
         liste_mot.clear()
 
@@ -82,44 +82,26 @@ def new_generation(mon_y, mon_x, liste_de_c):
     len_mon_c = len(liste_de_c)
     
     #Ajoute le mot qui a la meilleur distance au tableau new_generation
-    for i in range(6):
-        best_distance = get_best(mon_y, mon_x, liste_de_c)
-        best_word = best_distance[0]
-        new_generation.append(best_word)
-        liste_de_c.pop(liste_de_c.index(best_word))
+    best_distance = get_best(mon_y, mon_x, liste_de_c)
+    best_word = best_distance[0]
+    new_generation.append(best_word)
+    liste_de_c.pop(liste_de_c.index(best_word))
 
     while len(new_generation) != len_mon_c:
-        random = np.random.choice(np.arange(0, 5), p=[0.2, 0.2, 0.2, 0.2, 0.2])
+        random = np.random.choice(np.arange(0, 2), p=[0.4, 0.6])
         if random == 0:
             random_word1 = new_generation[0]
-            random_word2 = new_generation[1]
+            random_word2 = rd.choice(liste_de_c)
             new_enfant1 = crossover_nombre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant2)
         elif random == 1:
-            random_word1 = new_generation[1]
-            random_word2 = new_generation[2]
+            random_word1 = rd.choice(liste_de_c)
+            random_word2 = rd.choice(liste_de_c)
             new_enfant1 = crossover_nombre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant2)
-        elif random == 2:
-            random_word1 = new_generation[2]
-            random_word2 = new_generation[3]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
-            new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            new_generation.append(new_enfant1)
-        elif random == 3:
-            random_word1 = new_generation[3]
-            random_word2 = new_generation[4]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
-            new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            new_generation.append(new_enfant1)
-        elif random == 4:
-            random_word1 = new_generation[4]
-            random_word2 = new_generation[5]
-            new_enfant1 = crossover_nombre(random_word1, random_word2)
-            new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            new_generation.append(new_enfant1)
+    
     return new_generation
 
 # Prend en paramêtre un mot et la target
@@ -129,25 +111,19 @@ def mutation(mon_y, mon_x, mon_c ):
     
     # Pour chaque caractere du mot donné en paramètre
     for i in range(longueur_c):
-        chance = random.randint(0,11)
+        chance = rd.randint(0,6)
         if chance == 1:
-            if distance < 10:
+            if distance < 30:
                 poids_mutation = 1
             else:
                 poids_mutation = distance // 10
-            print("le poids de la mutation :", poids_mutation)
-            # time.sleep(0.05)
-            random_number = random.randint(-1 * poids_mutation, poids_mutation)
+            random_number = rd.randint(-1 * poids_mutation, poids_mutation)
             mon_c[i] = (random_number + mon_c[i]) % 1000 
  
     return mon_c
 
 
 
-x = [444, 510, 789,-862, 306]
-c = [[982, 932, -834, 995, 948], [543, 678, -320, 900, 832]] 
-c_bis = [543, 678, -320, 900, 832]
-y = -155674
 
 
 def algo_genetique(mon_y, mon_x, nb_iteration):
@@ -162,7 +138,7 @@ def algo_genetique(mon_y, mon_x, nb_iteration):
     best_distance = get_best(mon_y, mon_x, new_gene_list)[1]
     print("le meilleur mot est :", best_word,"avec une distance de:",best_distance) 
 
-    while best_word != mon_y:
+    while best_distance != 0:
         nb_iteration += 1
         print("iteration n°",nb_iteration)
         new_gene_list = new_generation(mon_y,mon_x, new_gene_list)
@@ -170,18 +146,22 @@ def algo_genetique(mon_y, mon_x, nb_iteration):
         best_distance = get_best(mon_y, mon_x, new_gene_list)[1]
         print("     le meilleur mot est :", best_word,"avec une distance de:",best_distance)
 
+x = [444, 510, 789,-862, 306]
+c = [[982, 932, -834, 995, 948], [543, 678, -320, 900, 832]] 
+c_bis = [543, 678, -320, 900, 832]
+y = -155674
+
 print(algo_genetique(y, x, 0))
 
-test = [794, -621, -204, 1, -97]
 
-# def verif(mon_x, mon_c):
-#     somme = 0 
-#     for i in range(len(mon_x)):
-#         somme = somme + mon_x[i] * mon_c[i]
-#     return somme
-# print(verif(x, test))
 
--240, -86, -402, -64, 839
--240, -86, -402, -64, 839
-759, -86, -402, -64, 839
--240, -86, -402, -64, 839
+
+test = [53, 809, 22, 865, 446]
+
+def verif(mon_x, mon_c):
+    somme = 0 
+    for i in range(len(mon_x)):
+        somme = somme + mon_x[i] * mon_c[i]
+    return somme
+print(verif(x, test))
+
