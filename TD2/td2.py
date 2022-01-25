@@ -67,17 +67,13 @@ def word_list_init(nombre_de_mot, nb_facteur):
 def crossover_nombre(mon_c1, mon_c2):
     enfant = []
     list_number1_length = len(mon_c1)
-    print("mon c1 : ", mon_c1)
-    print("mon c2 : ", mon_c2)
     # Il y a 85% de chance de prendre la lettre du premiers mot placé en paramêtre
     for i in range(list_number1_length):
         choice = np.random.choice(np.arange(0, 2), 
-                                  p=[0.85, 0.15])
+                                  p=[0.5, 0.5])
         if choice == 0: 
-            print(mon_c1[i])
             enfant.append(mon_c1[i])
         else: 
-            print(mon_c2[i])
             enfant.append(mon_c2[i])
     return enfant
 
@@ -91,7 +87,6 @@ def new_generation(mon_y, mon_x, liste_de_c):
         best_word = best_distance[0]
         new_generation.append(best_word)
         liste_de_c.pop(liste_de_c.index(best_word))
-    print(new_generation)
 
     while len(new_generation) != len_mon_c:
         random = np.random.choice(np.arange(0, 5), p=[0.2, 0.2, 0.2, 0.2, 0.2])
@@ -99,9 +94,7 @@ def new_generation(mon_y, mon_x, liste_de_c):
             random_word1 = new_generation[0]
             random_word2 = new_generation[1]
             new_enfant1 = crossover_nombre(random_word1, random_word2)
-            print("enfant 1 : ", new_enfant1)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            print("enfant 2 : ", new_enfant2)
             new_generation.append(new_enfant2)
         elif random == 1:
             random_word1 = new_generation[1]
@@ -127,8 +120,6 @@ def new_generation(mon_y, mon_x, liste_de_c):
             new_enfant1 = crossover_nombre(random_word1, random_word2)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
             new_generation.append(new_enfant1)
-    print(new_generation)
-    time.sleep(0.1)
     return new_generation
 
 # Prend en paramêtre un mot et la target
@@ -138,43 +129,14 @@ def mutation(mon_y, mon_x, mon_c ):
     
     # Pour chaque caractere du mot donné en paramètre
     for i in range(longueur_c):
-        # Si la distance avec la target est entre 100 et 50
-        # Alors une chance sur 9 d'effectuer la mutation
-        # if distance < 100 and distance >= 50:
-        #     chance = random.randint(0,9)
-        #     if chance == 1:
-                
-        #         poids_mutation = distance// 20
-        #         print("entre 100 et 50", poids_mutation)
-        #         random_number = random.randint(-1 * poids_mutation, poids_mutation)
-        #         mon_c[i] = (random_number + mon_c[i]) % 1000
-                
-        # # Si la distance avec la target est entre 50 et 15
-        # # Alors une chance sur 12 d'effectuer la mutation
-        # elif distance < 50 and distance >= 15:
-        #     chance = random.randint(0,12)
-        #     if chance == 1:
-        #         poids_mutation = 5
-        #         print("entre 50 et 15", poids_mutation)
-        #         random_number = random.randint(-1 * poids_mutation, poids_mutation)
-        #         mon_c[i] = (random_number + mon_c[i]) % 1000
-        # # Si la distance avec la target est inferieur à 15
-        # # Alors une chance sur 15 d'effectuer la mutation
-        # elif distance < 15:
-        #     chance = random.randint(0,15)
-        #     if chance == 1:
-        #         poids_mutation = 1
-        #         random_number = random.randint(-1 * poids_mutation, poids_mutation)
-        #         mon_c[i] = (random_number + mon_c[i]) % 1000
-        
-        # Sinon 1 chance sur 18 d'effectuer la mutation
-        # else:
-        chance = random.randint(0,55)
+        chance = random.randint(0,11)
         if chance == 1:
             if distance < 10:
                 poids_mutation = 1
             else:
                 poids_mutation = distance // 10
+            print("le poids de la mutation :", poids_mutation)
+            # time.sleep(0.05)
             random_number = random.randint(-1 * poids_mutation, poids_mutation)
             mon_c[i] = (random_number + mon_c[i]) % 1000 
  
@@ -191,7 +153,7 @@ y = -155674
 def algo_genetique(mon_y, mon_x, nb_iteration):
     print("ma_super_target : ",mon_y)
 
-    list_of_c = word_list_init(50,5)
+    list_of_c = word_list_init(200,5)
     print(list_of_c)
 
     print("iteration n°" ,nb_iteration)
