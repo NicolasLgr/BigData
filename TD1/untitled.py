@@ -191,8 +191,8 @@ target_toupie ="     /\        .'  `.    .'      `. <          > `.      .'    `
 ascii_target = "/\     /\   \ _____\   (_)-(_)"
 
        
-# test_length = 32
-# target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
+test_length = 20
+target = "".join([chr(random.randint(0, 255)) for _ in range(test_length)])
 nb_iteration = 0
 
 def algo_genetique(ma_super_target, nb_iteration):
@@ -211,10 +211,24 @@ def algo_genetique(ma_super_target, nb_iteration):
     while best_word != ma_super_target:
         # time.sleep(1)
         nb_iteration += 1
-        print("iteration n°",ma_super_target)
+        print("iteration n°", nb_iteration)
+        print("")
         new_gene_list = new_generation(ma_super_target, new_gene_list)
         best_word = get_best(ma_super_target, new_gene_list)[0]
         best_distance = get_best(ma_super_target,new_gene_list)[1]
         print("     le meilleur mot est :", best_word,"avec une distance de:",best_distance) 
 
-algo_genetique(ascii_batman, nb_iteration)
+# algo_genetique(target, nb_iteration)
+# for i in range(100):
+#     random_number = np.random.choice(np.arange(-1, 2), p=[0.5, 0, 0.5])
+#     print(random_number)
+
+print("c1 : 651")
+print("random number == -1927")
+print("651 - 1927 %1000")
+soustra = 651 - 1927
+print(soustra)
+#  mon c1 avant : 651
+#          poid de mutation : 2911
+#          random number ==  -1927
+#          mon c1 après : 724
