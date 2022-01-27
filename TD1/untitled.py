@@ -227,7 +227,7 @@ print("c1 : 651")
 print("random number == -1927")
 print("651 - 1927 %1000")
 soustra = 651 - 1927
-print(soustra)
+print(soustra % 1000)
 #  mon c1 avant : 651
 #          poid de mutation : 2911
 #          random number ==  -1927
