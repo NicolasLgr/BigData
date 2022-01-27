@@ -49,7 +49,7 @@ def get_best(mon_y, mon_x, liste_mon_c):
     return mot, min_distance
 
 # Fonction qui renvoie une liste de mots
-# prends en paramêtre le nombre de mot que doit contenir la liste
+
 def word_list_init(nombre_de_mot, nb_facteur):
     liste_mot = []
     end_list = []
@@ -62,12 +62,12 @@ def word_list_init(nombre_de_mot, nb_facteur):
 
     return end_list
 
-# Prends 2 mots en paramêtres
-# Renvoie un nouveau mot en mélangeant les 2 mots données
+# Prends 2 mots en parametres
+# Renvoie un nouveau mot en melangeant les 2 mots donnees
 def crossover_nombre(mon_c1, mon_c2):
     enfant = []
     list_number1_length = len(mon_c1)
-    # Il y a 85% de chance de prendre la lettre du premiers mot placé en paramêtre
+    # Il y a 85% de chance de prendre la lettre du premiers mot place en parametre
     for i in range(list_number1_length):
         choice = np.random.choice(np.arange(0, 2), 
                                   p=[0.5, 0.5])
@@ -104,12 +104,12 @@ def new_generation(mon_y, mon_x, liste_de_c):
     
     return new_generation
 
-# Prend en paramêtre un mot et la target
+# Prend en parametre un mot et la target
 def mutation(mon_y, mon_x, mon_c ):
     longueur_c = len(mon_c)
     distance = get_distance(mon_y, mon_x, mon_c)
     
-    # Pour chaque caractere du mot donné en paramètre
+    # Pour chaque caractere du mot donne en parametre
     for i in range(longueur_c):
         chance = rd.randint(0,6)
         if chance == 1:
@@ -132,7 +132,7 @@ def algo_genetique(mon_y, mon_x, nb_iteration):
     list_of_c = word_list_init(200,5)
     print(list_of_c)
 
-    print("iteration n°" ,nb_iteration)
+    print("iteration n" ,nb_iteration)
     new_gene_list = new_generation(mon_y, mon_x, list_of_c)
     best_word = get_best(mon_y, mon_x, new_gene_list)[0]
     best_distance = get_best(mon_y, mon_x, new_gene_list)[1]
@@ -140,7 +140,7 @@ def algo_genetique(mon_y, mon_x, nb_iteration):
 
     while best_distance != 0:
         nb_iteration += 1
-        print("iteration n°",nb_iteration)
+        print("iteration n",nb_iteration)
         new_gene_list = new_generation(mon_y,mon_x, new_gene_list)
         best_word = get_best(mon_y,mon_x, new_gene_list)[0]
         best_distance = get_best(mon_y, mon_x, new_gene_list)[1]
