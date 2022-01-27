@@ -27,21 +27,25 @@ def get_result_from_csv(name, csv_file):
                                     
     return len(tab), tab_x, tab_y
 
-tab_value = get_result_from_csv("Leger", "/Users/nicolas/Documents/BigData/TD2/ExamColl.csv")
+tab_value = get_result_from_csv("Leger", "TD2\ExamColl.csv")
 
 # tu as un C
 # tu le multiplie par tous les X, tu additionne les multiplication et tu soustrais à y
 # Renvoie la meilleur distance entre 2 mots
+def get_coef_for_dictance(mon_y, mon_x, mon_c):
+    resultat = 0
+    for i in range(5):
+        resultat = resultat + mon_c[i] * mon_x[i]
+    
+    return abs(mon_y - resultat)
+
 def get_distance(mes_y, mes_x, mon_c):
-    res = 0
-    for i in range(len(mes_x)):
-        tab_tmp = mes_x[i].copy()
-        
-        for j in range(5):
-            res = res + mon_c[j] * tab_tmp[j]
-        res = mes_y[i] - res
-        
-    return abs(res)
+
+    final_distance = 0
+    for i in range(len(mes_y)):
+        final_distance = final_distance + get_coef_for_dictance(mes_y[i], mes_x[i], mon_c)
+
+    return final_distance
 
 # Renvoie le meilleur d'une liste et sa distance avec la target
 def get_best(mon_y, mon_x, liste_mon_c):
@@ -100,20 +104,15 @@ def new_generation(mon_y, mon_x, liste_de_c):
             random_word1 = new_generation[0]
             random_word2 = rd.choice(liste_de_c)
             new_enfant1 = crossover_nombre(random_word1, random_word2)
-            # print("     enfant avant mutation :", new_enfant1)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            # print("     enfant apres mutation :", new_enfant2)
             new_generation.append(new_enfant2)
         elif random == 1:
             random_word1 = rd.choice(liste_de_c)
             random_word2 = rd.choice(liste_de_c)
             new_enfant1 = crossover_nombre(random_word1, random_word2)
-            # print("     enfant avant mutation :", new_enfant1)
             new_enfant2 = mutation(mon_y, mon_x, new_enfant1)
-            # print("     enfant apres mutation :", new_enfant2)
             new_generation.append(new_enfant2)
-        # print("")
-        # print("")
+
     
     return new_generation
 
@@ -124,42 +123,19 @@ def mutation(mon_y, mon_x, mon_c ):
     
     # Pour chaque caractere du mot donne en parametre
     for i in range(longueur_c):
-        # if distance <20:
-        #     chance = rd.randint(0,15)
-        # else:
-        chance = rd.randint(0,15)
+        chance = rd.randint(0,10)
         if chance == 0:
-            # if  distance >= 200:
-            #     poids_mutation = 10
-            # # elif 20 <= distance <= 100:
-            # #     poids_mutation = distance // 20
-            # # elif distance < 20:
-            # #     poids_mutation = 1
-            #else:
             poids_mutation = 10
-            if distance < 10:
-                poids_mutation = 1
-            
-            #print("     le poids de la mutation est de :", poids_mutation)
-
-            # if 10 < distance < 20:
-            #     poids_mutation = 3
-            # if distance <= 10:
-            #     random_number = np.random.choice(np.arange(-1, 2), p=[0.45, 0.1, 0.45])
-            # else:
+            # if distance < 100:
+            #     poids_mutation = (distance // 10) - 1
+            #     if poids_mutation == 0:
+            #         poids_mutation = 1
             random_number = rd.randint(-1 * poids_mutation, poids_mutation)
-            # print("             le random number est : ", random_number)
-            
-
-            # if random_number + mon_c[i] > 1000 or random_number + mon_c[i] < -1000:
-            #     temp = random_number + mon_c[i]
-            #     mon_c[i] = temp % 1000
+            # if -1000 > random_number + mon_c[i] > 1000:
+            #     calcul = (random_number + mon_c[i])
+            #     mon_c[i] = calcul % 1000
             # else:
-            # print("             mon c avant : ", mon_c[i])
             mon_c[i] = (random_number + mon_c[i])
-            # print("             mon c aprest : ", mon_c[i])
-            # print("")
- 
     return mon_c
 
 
@@ -179,12 +155,9 @@ def algo_genetique(mon_y, mon_x, nb_iteration):
         nb_iteration += 1
         print("iteration n",nb_iteration)
         new_gene_list = new_generation(mon_y,mon_x, new_gene_list)
-        # print(" la nouvelle gene :")
-        # print(new_gene_list)
         best_word = get_best(mon_y,mon_x, new_gene_list)[0]
         best_distance = get_best(mon_y, mon_x, new_gene_list)[1]
         print("     le meilleur mot est :", best_word,"avec une distance de:",best_distance)
-        # print("")
         print("")
 
 
